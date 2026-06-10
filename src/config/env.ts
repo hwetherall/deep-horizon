@@ -10,7 +10,10 @@ const envSchema = z.object({
   APP_BASE_URL: z.string().url().default("http://localhost:3000"),
   APP_TIMEZONE: z.string().default("America/Denver"),
 
-  INSFORGE_URL: z.string().url(),
+  INSFORGE_URL: z
+    .string()
+    .url()
+    .transform((u) => u.replace(/\/+$/, "")),
   INSFORGE_API_KEY: z.string().min(1),
   INSFORGE_ANON_KEY: z.string().optional(),
 

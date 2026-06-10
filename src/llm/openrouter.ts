@@ -87,7 +87,13 @@ export async function callStructured<T>(params: StructuredCallParams<T>): Promis
         body: JSON.stringify(body)
       });
       const text = await res.text();
-      if (!res.ok) throw new HttpError(res.status, `OpenRouter ${res.status}`, text.slice(0, 2000));
+      if (!res.ok) {
+        throw new HttpError(
+          res.status,
+          `OpenRouter ${res.status}: ${text.slice(0, 500)}`,
+          text.slice(0, 2000)
+        );
+      }
       return JSON.parse(text) as OpenRouterResponse;
     });
 

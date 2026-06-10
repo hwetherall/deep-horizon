@@ -6,8 +6,17 @@
  * classifies up to 5 candidates, writes a digest preview to local markdown.
  * Never sends email; never touches Notion unless --publish is passed.
  */
+import { loadEnvFile } from "node:process";
 import { writeFileSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+try {
+  loadEnvFile(join(dirname(fileURLToPath(import.meta.url)), "..", ".env"));
+} catch {
+  // Optional locally; CI/tests inject env vars directly.
+}
+
 import { getEnv } from "../src/config/env.js";
 import { PATROLS } from "../src/config/patrols.js";
 import { runDailyScan } from "../src/scout/runDailyScan.js";

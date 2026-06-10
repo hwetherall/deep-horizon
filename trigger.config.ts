@@ -1,8 +1,7 @@
 import { defineConfig } from "@trigger.dev/sdk/v3";
 
 export default defineConfig({
-  // TODO: replace with the real Trigger.dev project ref after `npx trigger.dev init`.
-  project: "proj_hermes_scout",
+  project: "proj_sxxidusmrrcqbcevomic",
   dirs: ["./trigger"],
   retries: {
     enabledInDev: false,
