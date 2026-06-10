@@ -18,7 +18,9 @@
     "db:migrate": "insforge db migrations up --all",
     "db:migrations": "insforge db migrations list",
     "functions:deploy": "insforge functions deploy feedback --file functions/feedback.ts --name \"Scout Feedback\"",
-    "scout:dry-run": "node --import tsx scripts/dry-run.ts"
+    "scout:dry-run": "node --import tsx scripts/dry-run.ts",
+    "scout:list": "node --import tsx scripts/list-opportunities.ts",
+    "scout:report": "node --import tsx scripts/generate-report.ts"
   },
   "dependencies": {
     "@insforge/sdk": "^1.3.1",

@@ -1,4 +1,6 @@
 node_modules/
+repomix-output.xml
+repomix*.xml
 .env
 .env.local
 out/

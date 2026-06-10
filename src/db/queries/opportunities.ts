@@ -2,6 +2,7 @@ import { getDb } from "../client.js";
 import type {
   Candidate,
   OpportunityRow,
+  OpportunityEvidenceRow,
   OpportunityScore,
   OpportunityStatus
 } from "../types.js";
@@ -186,6 +187,25 @@ export async function getEvidenceCount(opportunityId: string): Promise<number> {
     .eq("opportunity_id", opportunityId);
   if (error) throw new Error(`getEvidenceCount failed: ${error.message}`);
   return count ?? 0;
+}
+
+/** Fetch evidence rows for several opportunities at once (for reporting). */
+export async function getEvidenceForOpportunities(
+  opportunityIds: string[]
+): Promise<Record<string, OpportunityEvidenceRow[]>> {
+  if (opportunityIds.length === 0) return {};
+  const { data, error } = await getDb()
+    .from("opportunity_evidence")
+    .select()
+    .in("opportunity_id", opportunityIds)
+    .order("discovered_at", { ascending: false });
+  if (error) throw new Error(`getEvidenceForOpportunities failed: ${error.message}`);
+
+  const grouped: Record<string, OpportunityEvidenceRow[]> = {};
+  for (const row of (data ?? []) as OpportunityEvidenceRow[]) {
+    (grouped[row.opportunity_id] ??= []).push(row);
+  }
+  return grouped;
 }
 
 export async function wasRecentlyRejected(
