@@ -16,8 +16,8 @@ Use this stack:
 Claude Code / Cursor        development environment
 TypeScript                  implementation language
 Trigger.dev                 scheduled jobs + durable background tasks
-Supabase Postgres           source of truth
-Supabase Auth/Edge/API      optional lightweight HTTP endpoints
+InsForge Postgres           source of truth
+InsForge functions/API      optional lightweight HTTP endpoints
 OpenRouter                  model gateway
 Exa                         high-quality AI-native web discovery
 Tavily                      fast/advanced web search and research calls
@@ -31,7 +31,7 @@ Daily email                 triage surface for Harry
 Important architectural decision:
 
 ```text
-Supabase/Postgres = operational memory and source of truth
+InsForge/Postgres = operational memory and source of truth
 Notion            = polished human-readable opportunity library
 Daily email       = attention and feedback loop
 Hermes memory     = steering preferences and learned behavior
@@ -2083,15 +2083,40 @@ auto-generated "brief me before meeting" pages
 These are not blockers.
 
 ```text
-TODO: Decide email provider. Default to Resend unless Innovera already has a transactional email provider.
+DONE: Email provider = Resend (src/email/sendDigest.ts).
 TODO: Create Notion data source and copy NOTION_OPPORTUNITIES_DATA_SOURCE_ID.
-TODO: Choose exact OpenRouter model IDs for triage, extraction, brief, and strategy.
-TODO: Decide whether feedback endpoint lives in Next.js API routes or Supabase Edge Functions.
-TODO: Decide if this lives in an existing repo or a new standalone repo.
+TODO: Choose exact OpenRouter model IDs for triage, extraction, brief, and strategy (defaults in src/config/models.ts, overridable via OPENROUTER_*_MODEL env vars).
+DONE: Feedback endpoint = InsForge edge function (functions/feedback.ts), since there is no Next.js app.
+DONE: Standalone repo = this repo (deep-horizon).
 TODO: Add actual Hermes runtime interface once available.
-TODO: Add initial RSS feed list.
-TODO: Add GitHub token and rate-limit settings.
-TODO: Decide whether to use pgvector immediately or postpone embeddings until dedupe requires it.
+DONE: Initial RSS feed list in src/config/patrols.ts (RSS_FEEDS) — verify URLs on first live run.
+TODO: Add GitHub token (rate limits handled by withRetry on 429).
+DONE: pgvector enabled in the migration; embedding writes postponed until dedupe requires them.
+TODO: Run `npx trigger.dev init` and replace the placeholder project ref in trigger.config.ts.
+TODO: Set SCOUT_FEEDBACK_SECRET in both Trigger.dev env (signing) and InsForge secrets (verification, `npx @insforge/cli secrets add`).
+```
+
+### Implementation divergences from this plan
+
+```text
+1. opportunity_briefs.opportunity_id is nullable (plan §7 said not null) so the
+   weekly self-review can be stored as a run-level brief artifact.
+2. Feature flags SCOUT_ENABLE_EMAIL / SCOUT_ENABLE_NOTION (default false) gate
+   outbound side effects in development, per §24 phase 5.
+3. Feedback links point at /functions/feedback on INSFORGE_URL rather than
+   /api/scout/feedback (no Next.js app exists). Manual scan and health
+   endpoints (§22) are deferred: manual runs use the Trigger.dev dashboard or
+   `pnpm scout:dry-run`, which §2 lists as the MVP manual-run path.
+4. total_score is recomputed deterministically from the weights (§12) instead
+   of trusting the LLM's arithmetic; the LLM's value is kept in raw_output.
+5. PIVOT (2026-06-09): Supabase → InsForge (project deep-horizon,
+   4e15024f-6d89-44b5-955f-20b7c6c61c9e, us-west). The InsForge SDK's database
+   module is postgrest-js, so all query code is unchanged; only the client
+   factory (createAdminClient), env vars (INSFORGE_URL / INSFORGE_API_KEY),
+   and the feedback function (Deno Subhosting, functions/feedback.ts) changed.
+   Migrations live in migrations/ and apply via `pnpm db:migrate`. The Notion
+   property "Supabase ID" was renamed "Scout ID". Where older sections of this
+   plan say "Supabase", read "InsForge".
 ```
 
 ---

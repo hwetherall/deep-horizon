@@ -23,14 +23,14 @@ Notion publishing (feature-flagged)                 (src/scout/publishNotion.ts)
   ↓
 Daily digest + email (feature-flagged)              (src/scout/createDigest.ts, src/email/)
   ↓
-HMAC-signed feedback links → Supabase Edge Function (supabase/functions/feedback)
+HMAC-signed feedback links → InsForge edge function (functions/feedback.ts)
   ↓
 feedback_events → status updates → agent_lessons    (src/scout/applyFeedback.ts, weeklyReview.ts)
 ```
 
 ## Source of truth
 
-- **Supabase/Postgres** — operational memory and source of truth. Every run produces durable rows: scan_runs, raw_items, opportunities, scores, evidence, briefs, digests, feedback, lessons.
+- **InsForge/Postgres** — operational memory and source of truth. Every run produces durable rows: scan_runs, raw_items, opportunities, scores, evidence, briefs, digests, feedback, lessons. The SDK's database module is postgrest-js under the hood, so all queries use the standard `.from().select()/insert()/upsert()` surface with the admin API key (server-side only).
 - **Notion** — polished human library only; never authoritative.
 - **Email** — attention/feedback surface only.
 

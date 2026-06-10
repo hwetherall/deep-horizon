@@ -90,7 +90,7 @@ export interface OpportunityScore {
 }
 
 // ---------------------------------------------------------------------------
-// Database row types (handwritten; mirror supabase/migrations/0001_init.sql)
+// Database row types (handwritten; mirror migrations/20260609000001_init-hermes-scout.sql)
 // ---------------------------------------------------------------------------
 
 export interface ScanRunRow {

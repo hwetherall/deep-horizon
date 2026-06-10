@@ -39,7 +39,7 @@ export function renderDigestEmailHtml(params: DigestEmailParams): string {
     );
   } else {
     const items = params.top
-      .map((r, i) => {
+      .map((r) => {
         const o = r.opportunity;
         const feedbackLinks = FEEDBACK_DECISIONS.map(
           ([label, decision]) =>

@@ -3,11 +3,13 @@
 ## First-time setup
 
 1. `pnpm install`
-2. `cp .env.example .env` and fill in: Supabase (URL + keys), OpenRouter, Exa, Tavily, Firecrawl, GitHub token, Resend, `SCOUT_FEEDBACK_SECRET` (random ≥16 chars).
-3. Create a Supabase project (or `supabase init && supabase start` locally) and apply `supabase/migrations/`, then `supabase/seed.sql`.
-4. Create the Notion data source "AI Opportunity Radar" with the properties in plan §14; copy its ID into `NOTION_OPPORTUNITIES_DATA_SOURCE_ID`.
-5. `npx trigger.dev@latest init` to link a Trigger.dev project; replace the `project` ref in `trigger.config.ts`.
-6. Deploy the feedback function: `supabase functions deploy feedback --no-verify-jwt` and set the `SCOUT_FEEDBACK_SECRET` secret: `supabase secrets set SCOUT_FEEDBACK_SECRET=...`.
+2. Link the InsForge project (already done on this machine): `npx @insforge/cli link --project-id 4e15024f-6d89-44b5-955f-20b7c6c61c9e`. This writes `.insforge/project.json` (gitignored — contains the admin API key).
+3. `cp .env.example .env` and fill in: `INSFORGE_URL` (= `oss_host` in `.insforge/project.json`), `INSFORGE_API_KEY` (= `api_key` there), OpenRouter, Exa, Tavily, Firecrawl, GitHub token, Resend, `SCOUT_FEEDBACK_SECRET` (random ≥16 chars).
+4. Apply the schema + seed: `pnpm db:migrate` (runs `insforge db migrations up --all` over `migrations/`).
+5. Create the Notion data source "AI Opportunity Radar" with the properties in plan §14 (note: the row-id property is named **Scout ID**); copy its ID into `NOTION_OPPORTUNITIES_DATA_SOURCE_ID`.
+6. `npx trigger.dev@latest init` to link a Trigger.dev project; replace the `project` ref in `trigger.config.ts`.
+7. Deploy the feedback function and its secret:
+   `npx @insforge/cli secrets add SCOUT_FEEDBACK_SECRET <value>` then `pnpm functions:deploy`. Verify with `npx @insforge/cli functions list` (status must be `active`).
 
 ## Verify
 
@@ -16,7 +18,7 @@ pnpm typecheck && pnpm test
 pnpm scout:dry-run --patrol ai-search-research-tools --limit 10
 ```
 
-The dry run writes a digest preview to `out/dry-run-*.md`, stores raw items in Supabase, classifies ≤5 candidates, and never sends email or touches Notion (unless `--publish`).
+The dry run writes a digest preview to `out/dry-run-*.md`, stores raw items in InsForge, classifies ≤5 candidates, and never sends email or touches Notion (unless `--publish`).
 
 Use `--no-llm` for an ingest-only run (no OpenRouter calls).
 
@@ -36,7 +38,7 @@ Schedules (all America/Denver): daily scan weekdays 07:00, watchlist weekdays 09
 - **Budget exceeded**: scan continues low-cost steps, skips deep research, digest includes a warning. Raise `SCOUT_MAX_DAILY_*_COST_USD` or investigate `provider_calls`/`llm_calls` for runaway spend.
 - **Partial failure**: `scan_runs.status = 'partial_failed'`, error details in `scan_runs.error`; the digest still sends with a "Run warnings" section.
 - **Duplicate digest day**: digests are unique by `digest_date`; re-runs update in place (idempotent).
-- **Feedback link "Invalid"**: token mismatch — check `SCOUT_FEEDBACK_SECRET` matches between the Trigger.dev env (signing) and the Edge Function secret (verification).
+- **Feedback link "Invalid"**: token mismatch — check `SCOUT_FEEDBACK_SECRET` matches between the Trigger.dev env (signing) and the InsForge function secret (verification, set via `npx @insforge/cli secrets add`).
 
 ## Cost monitoring
 

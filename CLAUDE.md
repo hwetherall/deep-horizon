@@ -10,7 +10,7 @@ Find AI tools, APIs, repos, companies, features, and research that Innovera shou
 
 - TypeScript
 - Trigger.dev
-- Supabase
+- InsForge (Postgres backend; SDK is postgrest-js compatible)
 - OpenRouter
 - Exa
 - Tavily
@@ -27,7 +27,7 @@ Find AI tools, APIs, repos, companies, features, and research that Innovera shou
 - Every scheduled task must be idempotent.
 - Every provider call must be logged.
 - Every LLM call must be logged.
-- Never expose service role keys to the browser.
+- Never expose the InsForge admin API key to the browser.
 - Do not build a UI until the core scan -> score -> digest loop works.
 - Update plan.md when implementation diverges.
 
@@ -39,5 +39,6 @@ Find AI tools, APIs, repos, companies, features, and research that Innovera shou
 - lint: `pnpm lint`
 - dev: `pnpm dev`
 - trigger dev: `pnpm trigger:dev`
-- supabase start: `pnpm supabase:start`
+- db migrate: `pnpm db:migrate` (InsForge CLI; project must be linked via `npx @insforge/cli link`)
+- deploy feedback function: `pnpm functions:deploy`
 - scout dry run: `pnpm scout:dry-run --patrol ai-search-research-tools --limit 20`

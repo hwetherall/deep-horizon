@@ -16,5 +16,5 @@
     "types": ["node"]
   },
   "include": ["src/**/*.ts", "trigger/**/*.ts", "scripts/**/*.ts"],
-  "exclude": ["node_modules", "supabase/functions"]
+  "exclude": ["node_modules", "functions"]
 }

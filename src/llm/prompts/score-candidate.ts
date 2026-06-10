@@ -6,7 +6,7 @@ export const SCORING_RUBRIC = `Score the candidate on these dimensions, each 0-1
 
 - strategic_relevance (weight 0.25): How directly does this help Innovera's AI products, agent capabilities, research quality, or competitive position?
 - actionability (weight 0.20): Can Innovera act on this within weeks (benchmark, prototype, integrate)?
-- integration_fit (weight 0.20): How well does this fit Innovera's stack (TypeScript, agents, search/research APIs, Supabase, Trigger.dev)?
+- integration_fit (weight 0.20): How well does this fit Innovera's stack (TypeScript, agents, search/research APIs, InsForge/Postgres, Trigger.dev)?
 - evidence_quality (weight 0.15): Are sources official docs, repos, changelogs, technical posts — or thin secondhand claims?
 - novelty (weight 0.10): Is this genuinely new to Innovera, not a re-announcement of something already known?
 - urgency (weight 0.10): Is there a timing reason to act now (launch window, competitive movement, pricing change)?

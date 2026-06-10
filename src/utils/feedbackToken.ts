@@ -52,7 +52,7 @@ export function buildFeedbackUrl(params: {
     },
     params.secret
   );
-  const url = new URL("/functions/v1/feedback", params.baseUrl);
+  const url = new URL("/functions/feedback", params.baseUrl);
   url.searchParams.set("opportunity_id", params.opportunityId);
   url.searchParams.set("digest_id", params.digestId);
   url.searchParams.set("decision", params.decision);

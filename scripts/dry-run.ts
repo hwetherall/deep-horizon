@@ -2,7 +2,7 @@
  * E2E dry run (plan §23):
  *   pnpm scout:dry-run --patrol ai-search-research-tools --limit 20 [--publish] [--no-llm]
  *
- * Runs providers, stores raw_items in the configured (dev) Supabase,
+ * Runs providers, stores raw_items in the configured (dev) InsForge database,
  * classifies up to 5 candidates, writes a digest preview to local markdown.
  * Never sends email; never touches Notion unless --publish is passed.
  */

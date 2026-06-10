@@ -2,9 +2,8 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { getEnv, resetEnvCache } from "../../config/env.js";
 
 const REQUIRED = {
-  SUPABASE_URL: "https://proj.supabase.co",
-  SUPABASE_ANON_KEY: "anon-key",
-  SUPABASE_SERVICE_ROLE_KEY: "service-key",
+  INSFORGE_URL: "https://g65fd5ni.us-west.insforge.app",
+  INSFORGE_API_KEY: "ik_test_key",
   OPENROUTER_API_KEY: "or-key"
 };
 
@@ -14,7 +13,7 @@ beforeEach(() => {
   savedEnv = { ...process.env };
   resetEnvCache();
   for (const key of Object.keys(process.env)) {
-    if (/^(SUPABASE|OPENROUTER|SCOUT|EXA|TAVILY|FIRECRAWL|SERPER|JINA|GITHUB|NOTION|RESEND|DIGEST|EMAIL|APP_)/.test(key)) {
+    if (/^(INSFORGE|OPENROUTER|SCOUT|EXA|TAVILY|FIRECRAWL|SERPER|JINA|GITHUB|NOTION|RESEND|DIGEST|EMAIL|APP_)/.test(key)) {
       delete process.env[key];
     }
   }
@@ -27,7 +26,7 @@ afterEach(() => {
 
 describe("getEnv", () => {
   it("throws a readable error listing missing variables", () => {
-    expect(() => getEnv()).toThrowError(/SUPABASE_URL/);
+    expect(() => getEnv()).toThrowError(/INSFORGE_URL/);
   });
 
   it("parses valid env with defaults", () => {
@@ -53,7 +52,7 @@ describe("getEnv", () => {
   });
 
   it("rejects invalid URL", () => {
-    Object.assign(process.env, REQUIRED, { SUPABASE_URL: "not-a-url" });
-    expect(() => getEnv()).toThrowError(/SUPABASE_URL/);
+    Object.assign(process.env, REQUIRED, { INSFORGE_URL: "not-a-url" });
+    expect(() => getEnv()).toThrowError(/INSFORGE_URL/);
   });
 });

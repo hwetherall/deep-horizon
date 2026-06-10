@@ -6,7 +6,7 @@ Dimensions, each 0–10 (plan §12):
 | --- | --- | --- |
 | strategic_relevance | 0.25 | Does this directly help Innovera's AI products, agents, research, or competitive position? |
 | actionability | 0.20 | Can Innovera act within weeks (benchmark, prototype, integrate)? |
-| integration_fit | 0.20 | Fits the stack (TypeScript, agents, search/research APIs, Supabase, Trigger.dev)? |
+| integration_fit | 0.20 | Fits the stack (TypeScript, agents, search/research APIs, InsForge/Postgres, Trigger.dev)? |
 | evidence_quality | 0.15 | Official docs/repos/changelogs vs thin secondhand claims? |
 | novelty | 0.10 | Genuinely new to Innovera? |
 | urgency | 0.10 | Timing reason to act now? |

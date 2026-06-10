@@ -7,7 +7,7 @@ See [plan.md](./plan.md) for the full build plan and [CLAUDE.md](./CLAUDE.md) fo
 ## Architecture
 
 ```text
-Supabase/Postgres = operational memory and source of truth
+InsForge/Postgres = operational memory and source of truth
 Notion            = polished human-readable opportunity library
 Daily email       = attention and feedback loop
 Trigger.dev       = reliable recurring execution
@@ -19,8 +19,9 @@ Pipeline: source patrols (Exa, Tavily, Firecrawl, Serper, Jina, GitHub, RSS) →
 
 ```bash
 pnpm install
-cp .env.example .env   # fill in keys
-pnpm supabase:start    # local Supabase (applies migrations)
+cp .env.example .env                  # fill in keys (INSFORGE_URL = oss_host in .insforge/project.json)
+npx @insforge/cli link --project-id <id>   # once per machine, if not already linked
+pnpm db:migrate                       # apply migrations/ to the linked InsForge project
 pnpm typecheck
 pnpm test
 ```
@@ -36,4 +37,4 @@ pnpm test
 
 ## Feedback endpoint
 
-Lives in `supabase/functions/feedback` (Supabase Edge Function). Email feedback links are HMAC-signed; the endpoint verifies the token, writes a `feedback_events` row, updates opportunity status, and returns a small success page.
+Lives in `functions/feedback.ts` (InsForge edge function, deployed with `pnpm functions:deploy`). Email feedback links are HMAC-signed; the endpoint verifies the token, writes a `feedback_events` row, updates opportunity status, and returns a small success page.

@@ -1,4 +1,5 @@
--- Hermes Scout initial schema (plan §7).
+-- Hermes Scout initial schema (plan §7). Apply with:
+--   npx @insforge/cli db migrations up --all
 
 -- Enable useful extensions.
 create extension if not exists pgcrypto;

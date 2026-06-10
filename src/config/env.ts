@@ -10,9 +10,9 @@ const envSchema = z.object({
   APP_BASE_URL: z.string().url().default("http://localhost:3000"),
   APP_TIMEZONE: z.string().default("America/Denver"),
 
-  SUPABASE_URL: z.string().url(),
-  SUPABASE_ANON_KEY: z.string().min(1),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  INSFORGE_URL: z.string().url(),
+  INSFORGE_API_KEY: z.string().min(1),
+  INSFORGE_ANON_KEY: z.string().optional(),
 
   TRIGGER_SECRET_KEY: z.string().optional(),
 

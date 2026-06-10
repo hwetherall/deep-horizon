@@ -81,6 +81,7 @@ describe("computeRankScore (plan §17)", () => {
   });
 
   it("treats null total score as 0", () => {
-    expect(computeRankScore({ ...base, totalScore: null })).toBe(-0.8);
+    expect(computeRankScore({ ...base, totalScore: null })).toBe(0);
+    expect(computeRankScore({ ...base, totalScore: null, evidenceQuality: 2 })).toBe(-0.8);
   });
 });

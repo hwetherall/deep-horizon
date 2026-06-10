@@ -38,7 +38,7 @@ export async function sendDigestEmail(
     failureSummary: options.failureSummary,
     buildFeedbackLink: (opportunityId, decision) =>
       buildFeedbackUrl({
-        baseUrl: env.SUPABASE_URL,
+        baseUrl: env.INSFORGE_URL,
         opportunityId,
         digestId: digest.digestId,
         decision,

@@ -40,9 +40,9 @@ describe("feedback token", () => {
 
   it("builds a URL whose token verifies", () => {
     const url = new URL(
-      buildFeedbackUrl({ baseUrl: "https://proj.supabase.co", ...input, secret })
+      buildFeedbackUrl({ baseUrl: "https://g65fd5ni.us-west.insforge.app", ...input, secret })
     );
-    expect(url.pathname).toBe("/functions/v1/feedback");
+    expect(url.pathname).toBe("/functions/feedback");
     expect(url.searchParams.get("opportunity_id")).toBe(input.opportunityId);
     const token = url.searchParams.get("token")!;
     expect(verifyFeedbackToken(input, token, secret)).toBe(true);

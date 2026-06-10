@@ -42,7 +42,7 @@ describe("mapOpportunityToNotionProperties", () => {
     expect(props["Canonical URL"].url).toBe("https://exa.ai/deep-search");
     expect(props["Recommended Action"].select.name).toBe("benchmark");
     expect(props["Source Count"].number).toBe(4);
-    expect(props["Supabase ID"].rich_text[0].text.content).toBe(opportunity.id);
+    expect(props["Scout ID"].rich_text[0].text.content).toBe(opportunity.id);
     expect(props["First Seen"].date.start).toBe("2026-06-09");
   });
 

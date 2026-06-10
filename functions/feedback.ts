@@ -1,12 +1,13 @@
-// Supabase Edge Function: GET /functions/v1/feedback (plan §15/§22).
+// InsForge edge function (Deno Subhosting): GET /functions/feedback (plan §15/§22).
 // Verifies the HMAC token, writes a feedback_events row, updates opportunity
 // status, and returns a tiny success page.
 //
-// Required function secrets: SCOUT_FEEDBACK_SECRET (plus the standard
-// SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY injected by the platform).
-// Deploy with --no-verify-jwt so email links work without auth headers.
+// Deploy:  npx @insforge/cli functions deploy feedback --file functions/feedback.ts
+// Secrets: SCOUT_FEEDBACK_SECRET (npx @insforge/cli secrets add SCOUT_FEEDBACK_SECRET <value>)
+//          INSFORGE_BASE_URL and API_KEY are platform-provided; the fallbacks
+//          below cover environments where they use different names.
 
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import { createAdminClient } from "npm:@insforge/sdk";
 
 const VALID_DECISIONS = new Set([
   "useful",
@@ -49,7 +50,18 @@ function htmlResponse(body: string, status = 200): Response {
   );
 }
 
-Deno.serve(async (req: Request) => {
+export default async function (req: Request): Promise<Response> {
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+      }
+    });
+  }
+
   const url = new URL(req.url);
   const opportunityId = url.searchParams.get("opportunity_id");
   const digestId = url.searchParams.get("digest_id");
@@ -74,19 +86,23 @@ Deno.serve(async (req: Request) => {
     return htmlResponse("<h2>Invalid or expired link</h2>", 403);
   }
 
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-  );
+  const baseUrl = Deno.env.get("INSFORGE_BASE_URL") ?? Deno.env.get("INSFORGE_URL");
+  const apiKey = Deno.env.get("API_KEY") ?? Deno.env.get("INSFORGE_API_KEY");
+  if (!baseUrl || !apiKey) {
+    return htmlResponse("<h2>Server not configured</h2>", 500);
+  }
+  const db = createAdminClient({ baseUrl, apiKey }).database;
 
-  const { error: insertError } = await supabase.from("feedback_events").insert({
-    opportunity_id: opportunityId,
-    digest_id: digestId,
-    decision,
-    reviewer_email: reviewerEmail,
-    comment: comment ?? null,
-    metadata: { source: "email_link" }
-  });
+  const { error: insertError } = await db.from("feedback_events").insert([
+    {
+      opportunity_id: opportunityId,
+      digest_id: digestId,
+      decision,
+      reviewer_email: reviewerEmail,
+      comment: comment ?? null,
+      metadata: { source: "email_link" }
+    }
+  ]);
   if (insertError) {
     console.error("feedback insert failed", insertError.message);
     return htmlResponse("<h2>Failed to record feedback</h2>", 500);
@@ -94,7 +110,7 @@ Deno.serve(async (req: Request) => {
 
   const newStatus = STATUS_FOR_DECISION[decision];
   if (newStatus) {
-    const { error: updateError } = await supabase
+    const { error: updateError } = await db
       .from("opportunities")
       .update({ status: newStatus })
       .eq("id", opportunityId);
@@ -104,4 +120,4 @@ Deno.serve(async (req: Request) => {
   return htmlResponse(
     `<h2>Feedback recorded ✓</h2><p>Decision: <strong>${decision}</strong></p><p>You can close this tab.</p>`
   );
-});
+}

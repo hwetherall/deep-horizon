@@ -22,7 +22,7 @@ export function mapOpportunityToNotionProperties(
     Name: { title: [{ text: { content: opportunity.name.slice(0, 200) } }] },
     Status: { select: { name: STATUS_LABELS[opportunity.status] ?? "New" } },
     Type: { select: { name: opportunity.type } },
-    "Supabase ID": { rich_text: [{ text: { content: opportunity.id } }] },
+    "Scout ID": { rich_text: [{ text: { content: opportunity.id } }] },
     "First Seen": { date: { start: opportunity.first_seen_at.slice(0, 10) } },
     "Last Seen": { date: { start: opportunity.last_seen_at.slice(0, 10) } },
     "Source Count": { number: evidenceCount }
