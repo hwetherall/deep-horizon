@@ -1,0 +1,40 @@
+{
+  "name": "hermes-scout",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Innovera AI Opportunity Radar — always-on research agent (Hermes Scout)",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src trigger scripts",
+    "dev": "trigger dev",
+    "trigger:dev": "trigger dev",
+    "trigger:deploy": "trigger deploy",
+    "supabase:start": "supabase start",
+    "supabase:reset": "supabase db reset",
+    "scout:dry-run": "tsx scripts/dry-run.ts"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.3.0",
+    "@supabase/supabase-js": "^2.49.0",
+    "@trigger.dev/sdk": "^3.3.17",
+    "fast-xml-parser": "^4.5.0",
+    "resend": "^4.1.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "eslint": "^9.18.0",
+    "trigger.dev": "^3.3.17",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

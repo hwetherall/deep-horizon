@@ -1,0 +1,23 @@
+{
+  "results": [
+    {
+      "id": "https://exa.ai/blog/deep-search",
+      "title": "Introducing Deep Search",
+      "url": "https://www.exa.ai/blog/deep-search?utm_source=newsletter",
+      "publishedDate": "2026-06-01T00:00:00.000Z",
+      "author": "Exa Team",
+      "score": 0.92,
+      "summary": "Exa launches a deep search mode for multi-hop agent research.",
+      "highlights": ["Deep search runs multi-hop queries", "Structured output supported"]
+    },
+    {
+      "id": "https://github.com/example/research-agent",
+      "title": "example/research-agent",
+      "url": "https://github.com/example/research-agent",
+      "publishedDate": null,
+      "score": 0.81,
+      "text": "An open-source deep research agent with citation tracking."
+    }
+  ],
+  "costDollars": { "total": 0.0125 }
+}

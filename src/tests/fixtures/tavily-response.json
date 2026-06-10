@@ -1,0 +1,21 @@
+{
+  "query": "new AI agent eval framework open source",
+  "response_time": 1.2,
+  "results": [
+    {
+      "title": "AgentBench 2.0 released",
+      "url": "https://example.com/agentbench-2",
+      "content": "AgentBench 2.0 adds tool-use evaluation tracks for LLM agents.",
+      "raw_content": null,
+      "score": 0.97,
+      "published_date": "2026-06-05"
+    },
+    {
+      "title": "Top 100 AI tools in 2026",
+      "url": "https://seo-listicle.com/top-100-ai-tools/",
+      "content": "A roundup of the best AI tools this year.",
+      "raw_content": null,
+      "score": 0.41
+    }
+  ]
+}

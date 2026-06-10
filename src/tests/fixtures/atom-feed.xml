@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Vendor Changelog</title>
+  <entry>
+    <title>v2.4: deep search API</title>
+    <link rel="alternate" href="https://vendor.example.com/changelog/v2-4"/>
+    <summary>Adds a deep search endpoint with citations.</summary>
+    <published>2026-06-07T08:00:00Z</published>
+    <updated>2026-06-07T08:00:00Z</updated>
+  </entry>
+</feed>

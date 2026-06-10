@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "data": {
+    "markdown": "# Exa Pricing\n\nPay-as-you-go search starts at $5 per 1k requests.\n\n- Deep search: $25 per 1k\n- Contents: $1 per 1k pages",
+    "metadata": {
+      "title": "Pricing — Exa",
+      "description": "Exa API pricing for search, contents, and deep research.",
+      "sourceURL": "https://exa.ai/pricing",
+      "publishedTime": "2026-05-20T00:00:00.000Z"
+    }
+  }
+}

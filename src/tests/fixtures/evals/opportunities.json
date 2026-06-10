@@ -1,0 +1,102 @@
+{
+  "description": "Evaluation set (plan §23). Each example has the candidate as Scout would see it and the expected human label. Used to measure precision of top 5, duplicate rate, rejected-listicle rate, and score calibration.",
+  "examples": [
+    {
+      "name": "Exa",
+      "type": "api",
+      "category": "ai-search",
+      "canonical_url": "https://exa.ai",
+      "summary": "AI-native semantic search API with deep research mode, structured outputs, and content extraction.",
+      "expected_label": "already_known",
+      "notes": "Already in the stack; should only resurface on a genuine capability change."
+    },
+    {
+      "name": "Tavily",
+      "type": "api",
+      "category": "ai-search",
+      "canonical_url": "https://tavily.com",
+      "summary": "Fast web search API for LLM agents with news topic support and raw content.",
+      "expected_label": "already_known",
+      "notes": "Already in the stack."
+    },
+    {
+      "name": "GPT Researcher",
+      "type": "repo",
+      "category": "deep-research",
+      "canonical_url": "https://github.com/assafelovic/gpt-researcher",
+      "summary": "Open-source autonomous deep research agent producing cited reports.",
+      "expected_label": "benchmark",
+      "notes": "Directly relevant to Innovera web research quality benchmark (plan §27)."
+    },
+    {
+      "name": "Firecrawl",
+      "type": "api",
+      "category": "scraping",
+      "canonical_url": "https://firecrawl.dev",
+      "summary": "Scraping and crawling API returning clean markdown, with page change monitoring.",
+      "expected_label": "already_known",
+      "notes": "Already in the stack."
+    },
+    {
+      "name": "Browserbase",
+      "type": "company",
+      "category": "browser-automation",
+      "canonical_url": "https://browserbase.com",
+      "summary": "Managed headless browser infrastructure for AI agents.",
+      "expected_label": "watch",
+      "notes": "Relevant to browser automation patrol; not an immediate integration."
+    },
+    {
+      "name": "LangSmith",
+      "type": "tool",
+      "category": "evals-observability",
+      "canonical_url": "https://smith.langchain.com",
+      "summary": "Tracing, evaluation, and monitoring platform for LLM applications.",
+      "expected_label": "benchmark",
+      "notes": "Evals/observability patrol target; compare against alternatives."
+    },
+    {
+      "name": "OpenLLMTrace",
+      "type": "tool",
+      "category": "evals-observability",
+      "canonical_url": "https://example.com/openllmtrace",
+      "summary": "OpenTelemetry-style LLM tracing tool with span semantics for agent steps.",
+      "expected_label": "useful",
+      "notes": "Hypothetical OTel-style tracing tool; useful if real and maintained."
+    },
+    {
+      "name": "Acme AI raises $40M Series B",
+      "type": "company",
+      "category": "funding",
+      "canonical_url": "https://techcrunch.example.com/acme-ai-series-b",
+      "summary": "Funding announcement with no product, API, or release details.",
+      "expected_label": "reject",
+      "notes": "Funding-only announcement; should be rejected (plan §19)."
+    },
+    {
+      "name": "Top 100 AI tools in 2026",
+      "type": "other",
+      "category": "listicle",
+      "canonical_url": "https://seo-listicle.example.com/top-100-ai-tools",
+      "summary": "SEO listicle aggregating popular AI tools.",
+      "expected_label": "reject",
+      "notes": "Listicle; reject unless a specific item inside is independently valuable."
+    },
+    {
+      "name": "ChatPDF Plus",
+      "type": "tool",
+      "category": "thin-wrapper",
+      "canonical_url": "https://chatpdfplus.example.com",
+      "summary": "Chat with your PDFs. A thin wrapper around an existing LLM with no API or docs.",
+      "expected_label": "not_useful",
+      "notes": "Thin wrapper, no docs/API/repo (plan §19 downrank list)."
+    }
+  ],
+  "metrics": [
+    "precision of top 5",
+    "duplicate rate",
+    "rejected-listicle rate",
+    "score calibration",
+    "cost per useful finding"
+  ]
+}
