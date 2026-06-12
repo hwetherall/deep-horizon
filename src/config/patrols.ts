@@ -9,103 +9,169 @@ export interface PatrolConfig {
   minScoreForDeepResearch?: number;
 }
 
+/**
+ * Patrols are ordered by the seed-answer tiers (deep-horizon-seed.md §5):
+ * Tier 1 (priority 10–50) is the research product itself, Tier 2 (60–100)
+ * is plumbing that improves the engine, Tier 3 (110+) is detection/future.
+ */
 export const PATROLS: readonly PatrolConfig[] = [
+  // ---- Tier 1 — the research product itself -------------------------------
   {
     name: "ai-search-research-tools",
     priority: 10,
     description:
-      "Find new tools and APIs that improve AI web search, deep research, citation quality, source discovery, crawling, extraction, and synthesis.",
+      "Tier 1.1 Deep research & multi-source synthesis — this IS Innovera's product. Find tools, APIs, and patterns that improve source discovery, citation accuracy, freshness, crawling, extraction, and synthesis quality for a deep-research engine.",
     queries: [
-      "new AI search API for agents deep research launched",
-      "LLM web research API agent search tool",
-      "deep research agent open source web search citations",
-      "new tools for AI agents web browsing search extraction",
-      "AI-native search API Exa Tavily alternatives"
+      "new AI search API deep research agent launched",
+      "deep research agent open source multi-source synthesis citations",
+      "AI research report generation tool citation accuracy",
+      "web-scale search API for LLM research agents Exa Tavily alternatives",
+      "document extraction crawling API for AI research primary sources"
     ],
     providers: ["exa", "tavily", "github"],
     minScoreForDeepResearch: 7.5
   },
   {
-    name: "agent-infrastructure",
+    name: "market-competitive-intelligence",
     priority: 20,
     description:
-      "Find agent frameworks and infrastructure for orchestration, tool use, memory, planning, human-in-loop, and durable execution.",
+      "Tier 1.2 Market & competitive intelligence — tools and data sources for market sizing, incumbent mapping, and market-entry attractiveness (the ABB/RackPDU-style question). Look for structured market/competitor/funding data with API access.",
     queries: [
-      "new AI agent framework durable execution memory tools",
-      "agent orchestration framework TypeScript LLM",
-      "long running AI agent framework memory",
-      "human in the loop AI agent workflow framework",
-      "MCP agent framework new"
+      "market intelligence API competitor data market sizing",
+      "competitive intelligence platform API market entry analysis",
+      "company data API funding incumbents market research",
+      "AI market analysis tool TAM sizing competitor mapping",
+      "industry analysis data source API market reports"
     ],
-    providers: ["exa", "tavily", "github"]
+    providers: ["exa", "tavily", "serper"]
   },
   {
-    name: "evals-observability",
+    name: "deep-tech-feasibility",
     priority: 30,
     description:
-      "Find tools for evaluating, tracing, monitoring, debugging, and improving AI agents.",
+      "Tier 1.3 Technical feasibility & deep-tech scouting — tools and data to assess whether a frontier build is viable across non-software domains (satellite comms, robotics, sensing, energy/power hardware). The engine cannot be tuned to AI/software alone.",
     queries: [
-      "new AI agent eval framework open source",
-      "LLM observability tracing agent evaluation tool",
-      "AI agent monitoring debugging framework",
-      "prompt evals LLM regression testing new tool",
-      "LLM tracing platform agent observability"
+      "technology scouting platform deep tech assessment API",
+      "technical feasibility analysis tool engineering data source",
+      "deep tech research database hardware robotics satellite",
+      "scientific literature search API engineering domains",
+      "emerging technology landscape mapping tool API"
+    ],
+    providers: ["exa", "tavily", "serper"]
+  },
+  {
+    name: "patent-ip-regulatory",
+    priority: 40,
+    description:
+      "Tier 1.4 Patent / IP / regulatory research — deep-tech ventures live and die on freedom-to-operate, prior art, and regulatory feasibility. Find patent/prior-art APIs (Google Patents, PatentsView, Lens.org class), IP analytics, and regulatory-research tooling.",
+    queries: [
+      "patent search API prior art freedom to operate",
+      "patent analytics platform API claims data",
+      "regulatory research tool compliance database API",
+      "IP intelligence prior art search AI tool",
+      "patent landscape analysis API open data"
     ],
     providers: ["exa", "tavily", "github"]
   },
   {
-    name: "browser-automation",
-    priority: 40,
+    name: "risk-analysis-frameworks",
+    priority: 50,
     description:
-      "Find tools for browser agents, computer use, web automation, scraping, and task execution.",
+      "Tier 1.5 Risk identification & analysis frameworks — risk is an explicit, named output of Innovera's product. Find anything that structures or strengthens risk surfacing for new-venture and market-entry decisions: frameworks, tools, structured risk taxonomies.",
     queries: [
-      "browser agent framework AI automation new",
-      "computer use agent browser automation open source",
-      "AI web automation tool for agents",
-      "browser-use alternatives agent automation",
-      "headless browser AI agent framework"
+      "risk assessment framework new venture market entry",
+      "AI risk analysis tool strategic decision making",
+      "venture risk identification framework corporate innovation",
+      "structured risk taxonomy technology assessment tool",
+      "scenario analysis tool strategic risk software"
+    ],
+    providers: ["exa", "tavily", "github"]
+  },
+
+  // ---- Tier 2 — plumbing that improves the engine -------------------------
+  {
+    name: "agent-infrastructure",
+    priority: 60,
+    description:
+      "Tier 2.6 Agent infrastructure & orchestration — durable, branching, multi-step research workflows (LangGraph class). Only valuable insofar as it makes Innovera's research engine deeper, broader, or more reliable; plumbing-only improvements rank low.",
+    queries: [
+      "durable AI agent orchestration framework long running research workflows",
+      "agent workflow framework human in the loop persistence",
+      "multi-step research agent orchestration TypeScript",
+      "agent planning framework branching control flow LLM",
+      "MCP agent framework tool connectivity new"
     ],
     providers: ["exa", "tavily", "github"]
   },
   {
     name: "memory-rag-retrieval",
-    priority: 50,
+    priority: 70,
     description:
-      "Find memory systems, RAG tools, retrieval frameworks, vector search, long-term memory, and knowledge systems useful for Innovera.",
+      "Tier 2.7 Agent memory / RAG / retrieval / knowledge systems — retaining and reusing research context across long multi-week client initiatives.",
     queries: [
-      "AI agent memory system open source",
-      "long term memory for AI agents",
-      "RAG evaluation retrieval framework new",
-      "knowledge graph memory LLM agents",
-      "vector database agent memory new feature"
+      "AI agent memory system long research projects open source",
+      "RAG retrieval framework research corpus citations",
+      "knowledge graph memory LLM agents research",
+      "long term memory AI agents context reuse",
+      "retrieval evaluation framework RAG quality"
+    ],
+    providers: ["exa", "tavily", "github"]
+  },
+  {
+    name: "evals-observability",
+    priority: 80,
+    description:
+      "Tier 2.8 Evals / observability / tracing — research reliability and trustable outputs for high-stakes client decisions. Tracing and evaluating long research runs.",
+    queries: [
+      "LLM eval framework research quality citation accuracy",
+      "AI agent tracing observability long running workflows",
+      "LLM output reliability evaluation high stakes",
+      "research agent benchmark eval dataset tool",
+      "LLM regression testing evals platform new"
     ],
     providers: ["exa", "tavily", "github"]
   },
   {
     name: "model-api-capability-changes",
-    priority: 60,
+    priority: 90,
     description:
-      "Find model and API feature changes that could unlock new Innovera capabilities.",
+      "Tier 2.9 Model / API capability changes — new capabilities (longer context, better tool use, new modalities, deep-research endpoints) that unlock deeper or broader research. Includes Perplexity/OpenAI/Gemini Deep Research-class product moves as capability bars.",
     queries: [
-      "new LLM API feature tool calling structured output agents",
-      "new model API computer use browser agent",
-      "LLM provider changelog structured outputs agents",
-      "new multimodal model API agent tools",
-      "AI model pricing context window tool use update"
+      "new LLM API deep research capability launched",
+      "model API longer context tool use update research agents",
+      "LLM provider changelog structured outputs research",
+      "new multimodal model API document analysis",
+      "deep research product launch Perplexity OpenAI Gemini update"
     ],
     providers: ["exa", "tavily", "rss"]
   },
   {
-    name: "competitive-agent-companies",
-    priority: 70,
+    name: "browser-automation",
+    priority: 100,
     description:
-      "Find companies building AI agent platforms, AI workflow automation, research agents, and enterprise copilots that may compete with or inspire Innovera.",
+      "Tier 2.10 Browser automation / computer use — agent access to sources behind interaction: portals, dynamic pages, gated industry data. Valued as research-source access, not as automation for its own sake.",
     queries: [
-      "new AI agent platform startup enterprise workflows",
-      "AI workflow automation company agents launched",
-      "enterprise AI agents company research automation",
-      "AI copilot agent platform vertical SaaS launched",
-      "autonomous business process AI agent company"
+      "browser agent framework access gated data sources",
+      "computer use agent web research automation",
+      "hosted browser API for AI agents reliability",
+      "AI web automation extract data behind login portal",
+      "headless browser agent framework new"
+    ],
+    providers: ["exa", "tavily", "github"]
+  },
+
+  // ---- Tier 3 — detection & future ----------------------------------------
+  {
+    name: "competitor-emergence",
+    priority: 110,
+    description:
+      "Tier 3.11 Competitive emergence — no direct competitors are known yet, so detect EMERGENCE: any company beginning to offer research-to-strategy-to-risk or new-venture validation for corporate innovation teams, as a product or a service. Also watch adjacent players (strategy consultancies productizing research, innovation-management platforms, market-intelligence platforms, AI deep-research products) moving toward initiative-in → researched options + risks out.",
+    queries: [
+      "AI research strategy platform corporate innovation teams launched",
+      "new venture validation software corporate innovation",
+      "AI strategy analyst startup enterprise innovation",
+      "consulting firm AI research product corporate ventures",
+      "innovation intelligence platform venture research risk launched"
     ],
     providers: ["exa", "tavily", "serper"]
   }
@@ -115,15 +181,16 @@ export function getPatrol(name: string): PatrolConfig | undefined {
   return PATROLS.find((p) => p.name === name);
 }
 
-/** GitHub search queries for the open-source leverage patrol (plan §9). */
+/** GitHub search queries for the open-source leverage patrol (Tier 3.12). */
 export const GITHUB_QUERIES: readonly string[] = [
-  "topic:ai-agent stars:>100 pushed:>2026-01-01",
-  "topic:llm stars:>100 pushed:>2026-01-01",
-  '"agent eval" pushed:>2026-01-01',
-  '"browser agent" pushed:>2026-01-01',
   '"deep research" pushed:>2026-01-01',
-  '"mcp server" pushed:>2026-01-01',
-  '"rag evaluation" pushed:>2026-01-01'
+  'topic:ai-agent stars:>100 pushed:>2026-01-01',
+  '"research agent" pushed:>2026-01-01',
+  '"market research" llm pushed:>2026-01-01',
+  '"patent search" pushed:>2026-01-01',
+  '"risk assessment" llm pushed:>2026-01-01',
+  '"rag evaluation" pushed:>2026-01-01',
+  '"mcp server" research pushed:>2026-01-01'
 ];
 
 /** Durable high-signal RSS feeds (plan §9). Extend freely. */

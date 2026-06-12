@@ -60,3 +60,35 @@ export function buildFeedbackUrl(params: {
   url.searchParams.set("token", token);
   return url.toString();
 }
+
+/**
+ * Level-1 sentiment ("faces") link. The sentiment value is signed in the same
+ * payload slot the decision uses, so the edge function verifies both link
+ * kinds identically. digestId may be "none" for links outside a digest
+ * (e.g. the HTML report).
+ */
+export function buildSentimentFeedbackUrl(params: {
+  baseUrl: string;
+  opportunityId: string;
+  digestId: string;
+  sentiment: string;
+  reviewerEmail: string;
+  secret: string;
+}): string {
+  const token = signFeedbackToken(
+    {
+      opportunityId: params.opportunityId,
+      digestId: params.digestId,
+      decision: params.sentiment,
+      reviewerEmail: params.reviewerEmail
+    },
+    params.secret
+  );
+  const url = new URL("/functions/feedback", params.baseUrl);
+  url.searchParams.set("opportunity_id", params.opportunityId);
+  url.searchParams.set("digest_id", params.digestId);
+  url.searchParams.set("sentiment", params.sentiment);
+  url.searchParams.set("reviewer_email", params.reviewerEmail);
+  url.searchParams.set("token", token);
+  return url.toString();
+}

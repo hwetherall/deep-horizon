@@ -1,8 +1,9 @@
 import { getModels } from "../config/models.js";
 import { getPatrol } from "../config/patrols.js";
 import type { Candidate, RawItemRow } from "../db/types.js";
-import { getActiveLessons } from "../db/queries/feedback.js";
+import { getActiveLessons, getRecentFeedbackSignals } from "../db/queries/feedback.js";
 import { getRecentEntityNames } from "../db/queries/opportunities.js";
+import { buildTasteProfileBlock } from "../llm/prompts/taste-profile.js";
 import { callStructured } from "../llm/openrouter.js";
 import {
   extractionResultSchema,
@@ -32,10 +33,12 @@ export async function extractCandidatesForPatrol(params: {
   const patrol = getPatrol(params.patrolName);
   if (!patrol) throw new Error(`Unknown patrol: ${params.patrolName}`);
 
-  const [lessons, recentEntityNames] = await Promise.all([
+  const [lessons, recentEntityNames, feedbackSignals] = await Promise.all([
     getActiveLessons(),
-    getRecentEntityNames()
+    getRecentEntityNames(),
+    getRecentFeedbackSignals()
   ]);
+  const tasteProfile = buildTasteProfileBlock(feedbackSignals);
 
   const outcome: ExtractionOutcome = { accepted: [], rejected: [] };
 
@@ -51,7 +54,8 @@ export async function extractCandidatesForPatrol(params: {
           patrol,
           rawItems: batch,
           recentEntityNames,
-          lessons
+          lessons,
+          tasteProfile
         }),
         schema: extractionResultSchema,
         jsonSchema: extractionJsonSchema as unknown as Record<string, unknown>,

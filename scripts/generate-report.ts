@@ -24,6 +24,8 @@ import {
   getTopOpportunities,
   getEvidenceForOpportunities
 } from "../src/db/queries/opportunities.js";
+import { getLatestSentimentByOpportunity } from "../src/db/queries/feedback.js";
+import { buildSentimentFeedbackUrl } from "../src/utils/feedbackToken.js";
 import { renderReportHtml } from "../src/report/renderReport.js";
 
 function parseArgs(argv: string[]): {
@@ -53,7 +55,7 @@ function parseArgs(argv: string[]): {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  getEnv(); // fail fast on bad env
+  const env = getEnv(); // fail fast on bad env
 
   const sinceIso =
     args.days !== undefined
@@ -66,14 +68,30 @@ async function main() {
     sinceIso
   });
 
-  const evidenceByOpportunity = await getEvidenceForOpportunities(
-    opportunities.map((o) => o.id)
-  );
+  const [evidenceByOpportunity, sentimentMap] = await Promise.all([
+    getEvidenceForOpportunities(opportunities.map((o) => o.id)),
+    getLatestSentimentByOpportunity(opportunities.map((o) => o.id))
+  ]);
+
+  // Rating buttons need the feedback secret; render without them if unset.
+  const buildSentimentLink = env.SCOUT_FEEDBACK_SECRET
+    ? (opportunityId: string, sentiment: string) =>
+        buildSentimentFeedbackUrl({
+          baseUrl: env.INSFORGE_URL,
+          opportunityId,
+          digestId: "none",
+          sentiment,
+          reviewerEmail: env.DIGEST_TO_EMAIL,
+          secret: env.SCOUT_FEEDBACK_SECRET!
+        })
+    : undefined;
 
   const html = renderReportHtml({
     generatedAt: new Date().toISOString(),
     opportunities,
-    evidenceByOpportunity
+    evidenceByOpportunity,
+    buildSentimentLink,
+    sentimentByOpportunity: Object.fromEntries(sentimentMap)
   });
 
   const outDir = join(repoRoot, "out");

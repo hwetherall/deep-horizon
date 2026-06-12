@@ -39,6 +39,9 @@ export type FeedbackDecision =
   | "adopted"
   | "needs_more_research";
 
+/** Level-1 human rating: the good/neutral/bad "faces" (seed Q15). */
+export type FeedbackSentiment = "good" | "neutral" | "bad";
+
 export type RecommendedAction =
   | "benchmark"
   | "prototype"
@@ -239,7 +242,9 @@ export interface FeedbackEventRow {
   id: string;
   opportunity_id: string | null;
   digest_id: string | null;
-  decision: FeedbackDecision;
+  /** Null for sentiment-only ("faces") events. */
+  decision: FeedbackDecision | null;
+  sentiment: FeedbackSentiment | null;
   reviewer_email: string;
   comment: string | null;
   created_at: string;

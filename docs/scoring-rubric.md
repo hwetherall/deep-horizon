@@ -1,15 +1,17 @@
-# Scoring rubric (v1)
+# Scoring rubric (v2)
+
+v2 re-anchors the dimensions to Innovera's research-and-strategy engine (see `deep-horizon-seed.md`): weights are unchanged from v1, but `strategic_relevance` is now tier-aware, so v1 and v2 scores are not directly comparable.
 
 Dimensions, each 0–10 (plan §12):
 
 | Dimension | Weight | Question |
 | --- | --- | --- |
-| strategic_relevance | 0.25 | Does this directly help Innovera's AI products, agents, research, or competitive position? |
-| actionability | 0.20 | Can Innovera act within weeks (benchmark, prototype, integrate)? |
-| integration_fit | 0.20 | Fits the stack (TypeScript, agents, search/research APIs, InsForge/Postgres, Trigger.dev)? |
-| evidence_quality | 0.15 | Official docs/repos/changelogs vs thin secondhand claims? |
+| strategic_relevance | 0.25 | Does this make the research engine (initiative → researched options + risks) deeper, broader, more credible, or faster? Tier 1 (research product) highest; Tier 2 (plumbing) mid only with a path to better research output; Tier 3 lifecycle tooling capped low; competitive emergence always high. |
+| actionability | 0.20 | Concrete next step backed by real evidence; can Innovera act within weeks (benchmark, prototype, integrate)? |
+| integration_fit | 0.20 | Fits the stack (TypeScript, agents, search/research APIs, InsForge/Postgres, Trigger.dev) — or, for data sources, API access and workable licensing? |
+| evidence_quality | 0.15 | Official docs/repos/changelogs/patent & market databases vs thin secondhand claims? |
 | novelty | 0.10 | Genuinely new to Innovera? |
-| urgency | 0.10 | Timing reason to act now? |
+| urgency | 0.10 | Timing reason to act now (launch window, competitive emergence, capability bar moving)? |
 
 `total_score` is recomputed deterministically in `computeTotalScore` — the LLM's arithmetic is never trusted. `confidence` is 0–1.
 

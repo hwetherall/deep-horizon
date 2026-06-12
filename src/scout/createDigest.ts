@@ -69,7 +69,7 @@ export async function createDigest(params: {
   const benchCount = benchmarkWorthy.length;
   const emailSubject = quietDay
     ? `[Innovera Scout] Quiet day — nothing above the bar — ${digestDate}`
-    : `[Innovera Scout] ${subjectCount} AI opportunities — ${benchCount} benchmark-worthy — ${digestDate}`;
+    : `[Innovera Scout] ${subjectCount} opportunities — ${benchCount} benchmark-worthy — ${digestDate}`;
 
   const markdown = renderDigestMarkdown({
     digestDate,

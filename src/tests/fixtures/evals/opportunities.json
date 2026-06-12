@@ -90,6 +90,42 @@
       "summary": "Chat with your PDFs. A thin wrapper around an existing LLM with no API or docs.",
       "expected_label": "not_useful",
       "notes": "Thin wrapper, no docs/API/repo (plan §19 downrank list)."
+    },
+    {
+      "name": "PatentsView",
+      "type": "api",
+      "category": "patent-ip-regulatory",
+      "canonical_url": "https://patentsview.org",
+      "summary": "Free API over USPTO patent data with structured claims, assignees, and citations.",
+      "expected_label": "useful",
+      "notes": "Tier-1 patent/IP source (seed §7.6) — exactly what the old AI-only patrols would have missed; prototype for freedom-to-operate research."
+    },
+    {
+      "name": "AlphaSense",
+      "type": "company",
+      "category": "market-intelligence",
+      "canonical_url": "https://alpha-sense.com",
+      "summary": "Market-intelligence platform with search over filings, transcripts, and analyst research.",
+      "expected_label": "useful",
+      "notes": "Tier-1 market-intelligence data source (seed §7.7); evaluate/partner for market-entry questions like RackPDU."
+    },
+    {
+      "name": "VentureScope AI",
+      "type": "competitor",
+      "category": "competitor-emergence",
+      "canonical_url": "https://venturescope.example.com",
+      "summary": "Startup offering AI-driven venture validation — research, strategy options, and risk reports for corporate innovation teams.",
+      "expected_label": "useful",
+      "notes": "Hypothetical emergence case (seed §9): initiative-in → options + risks out for innovation teams must always fire competitive_warning, even from a funding-only announcement."
+    },
+    {
+      "name": "DentalFlow AI",
+      "type": "tool",
+      "category": "vertical-saas",
+      "canonical_url": "https://dentalflow.example.com",
+      "summary": "AI scheduling and billing copilot for dental practices.",
+      "expected_label": "reject",
+      "notes": "Narrow single-vertical software with no cross-domain research value (seed §6 deep-tech noise rule)."
     }
   ],
   "metrics": [

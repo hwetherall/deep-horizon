@@ -4,7 +4,17 @@ export interface ReportData {
   generatedAt: string;
   opportunities: OpportunityRow[];
   evidenceByOpportunity: Record<string, OpportunityEvidenceRow[]>;
+  /** Signed level-1 rating links (seed Q15); omit to render without rating buttons. */
+  buildSentimentLink?: (opportunityId: string, sentiment: string) => string;
+  /** Latest human rating per opportunity, to highlight what's already rated. */
+  sentimentByOpportunity?: Record<string, string>;
 }
+
+const SENTIMENT_FACES: [face: string, label: string, sentiment: string][] = [
+  ["\u{1F642}", "Good", "good"],
+  ["\u{1F610}", "Neutral", "neutral"],
+  ["\u{1F641}", "Bad", "bad"]
+];
 
 const ACTION_LABELS: Record<string, string> = {
   benchmark: "Benchmark",
@@ -44,7 +54,30 @@ function scoreClass(score: number | null): string {
   return "score-low";
 }
 
-function opportunityCard(o: OpportunityRow, evidence: OpportunityEvidenceRow[]): string {
+function ratingRow(
+  o: OpportunityRow,
+  buildSentimentLink?: (opportunityId: string, sentiment: string) => string,
+  currentSentiment?: string
+): string {
+  if (!buildSentimentLink) return "";
+  const buttons = SENTIMENT_FACES.map(([face, label, sentiment]) => {
+    const active = currentSentiment === sentiment;
+    return `<a class="rate${active ? " rated" : ""}" href="${esc(
+      buildSentimentLink(o.id, sentiment)
+    )}" target="_blank" rel="noreferrer" title="${esc(label)} — opens a page where you can add written context">${face}<span>${esc(label)}</span></a>`;
+  }).join("");
+  return `<div class="rating">
+    <span class="rating-label">${currentSentiment ? "Rated:" : "Rate it:"}</span>
+    ${buttons}
+  </div>`;
+}
+
+function opportunityCard(
+  o: OpportunityRow,
+  evidence: OpportunityEvidenceRow[],
+  buildSentimentLink?: (opportunityId: string, sentiment: string) => string,
+  currentSentiment?: string
+): string {
   const action = o.recommended_action ?? "";
   const actionLabel = ACTION_LABELS[action] ?? action ?? "—";
   const total = o.total_score ?? 0;
@@ -115,6 +148,7 @@ function opportunityCard(o: OpportunityRow, evidence: OpportunityEvidenceRow[]):
           : ""
       }
       ${evidenceHtml}
+      ${ratingRow(o, buildSentimentLink, currentSentiment)}
     </footer>
   </article>`;
 }
@@ -142,7 +176,14 @@ export function renderReportHtml(data: ReportData): string {
     .join("\n");
 
   const cards = opportunities
-    .map((o) => opportunityCard(o, evidenceByOpportunity[o.id] ?? []))
+    .map((o) =>
+      opportunityCard(
+        o,
+        evidenceByOpportunity[o.id] ?? [],
+        data.buildSentimentLink,
+        data.sentimentByOpportunity?.[o.id]
+      )
+    )
     .join("\n");
 
   const dateStr = new Date(generatedAt).toLocaleString("en-US", {
@@ -231,6 +272,14 @@ export function renderReportHtml(data: ReportData): string {
   .evidence a { color: var(--accent); text-decoration: none; }
   .evidence a:hover { text-decoration: underline; }
   .evidence .src { color: var(--muted); font-size: 11px; margin-left: 8px; }
+  .rating { margin-left: auto; display: flex; align-items: center; gap: 8px; padding-top: 12px; }
+  .rating-label { color: var(--muted); font-size: 12px; }
+  .rate { text-decoration: none; font-size: 18px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--panel-2); transition: .15s; }
+  .rate span { font-size: 12px; color: var(--muted); margin-left: 5px; }
+  .rate:hover { border-color: var(--accent); }
+  .rate:hover span { color: var(--text); }
+  .rate.rated { border-color: var(--accent); background: rgba(110,168,254,.15); }
+  .rate.rated span { color: var(--accent); font-weight: 700; }
   .empty { text-align: center; color: var(--muted); padding: 60px; }
   footer.foot { margin-top: 40px; color: var(--muted); font-size: 12px; text-align: center; }
   @media (max-width: 640px) { .metrics { grid-template-columns: 1fr; } h1 { font-size: 26px; } }

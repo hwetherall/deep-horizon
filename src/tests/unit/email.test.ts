@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { renderDigestEmailHtml } from "../../email/templates/dailyDigest.js";
 import { renderDigestMarkdown, type RankedOpportunity } from "../../scout/createDigest.js";
-import { statusForDecision } from "../../scout/applyFeedback.js";
+import { statusForDecision, statusForSentiment } from "../../scout/applyFeedback.js";
 import type { OpportunityRow } from "../../db/types.js";
 
 function makeOpportunity(overrides: Partial<OpportunityRow> = {}): OpportunityRow {
@@ -48,14 +48,31 @@ describe("renderDigestEmailHtml", () => {
       benchmarkWorthy: ranked,
       quietDay: false,
       costSummary: { providerUsd: 1.23, llmUsd: 2.34 },
-      buildFeedbackLink: (id, decision) => `https://x.test/fb?o=${id}&d=${decision}`
+      buildFeedbackLink: (id, decision) => `https://x.test/fb?o=${id}&d=${decision}`,
+      buildSentimentLink: (id, sentiment) => `https://x.test/fb?o=${id}&s=${sentiment}`
     });
     expect(html).toContain("Tavily Advanced");
     expect(html).toContain("https://x.test/fb?o=44444444-4444-4444-4444-444444444444&amp;d=benchmark");
-    expect(html).toContain("Useful");
+    expect(html).toContain("https://x.test/fb?o=44444444-4444-4444-4444-444444444444&amp;s=good");
+    expect(html).toContain("https://x.test/fb?o=44444444-4444-4444-4444-444444444444&amp;s=bad");
+    expect(html).toContain("Rate it:");
+    expect(html).toContain("\u{1F642}");
     expect(html).toContain("Reject");
     expect(html).toContain("$1.23");
     expect(html).toContain("https://notion.so/page");
+  });
+
+  it("renders without sentiment links when no builder is provided", () => {
+    const html = renderDigestEmailHtml({
+      digestDate: "2026-06-09",
+      digestId: "d1",
+      top: ranked,
+      benchmarkWorthy: [],
+      quietDay: false,
+      buildFeedbackLink: () => "https://x.test"
+    });
+    expect(html).not.toContain("Rate it:");
+    expect(html).toContain("Set action:");
   });
 
   it("renders quiet day", () => {
@@ -114,5 +131,13 @@ describe("statusForDecision (plan §18)", () => {
     expect(statusForDecision("useful")).toBeNull();
     expect(statusForDecision("already_known")).toBeNull();
     expect(statusForDecision("needs_more_research")).toBeNull();
+  });
+});
+
+describe("statusForSentiment (seed Q15)", () => {
+  it("only a bad rating changes status", () => {
+    expect(statusForSentiment("bad")).toBe("rejected");
+    expect(statusForSentiment("good")).toBeNull();
+    expect(statusForSentiment("neutral")).toBeNull();
   });
 });

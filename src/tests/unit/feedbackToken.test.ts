@@ -2,7 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   signFeedbackToken,
   verifyFeedbackToken,
-  buildFeedbackUrl
+  buildFeedbackUrl,
+  buildSentimentFeedbackUrl
 } from "../../utils/feedbackToken.js";
 
 const input = {
@@ -46,5 +47,30 @@ describe("feedback token", () => {
     expect(url.searchParams.get("opportunity_id")).toBe(input.opportunityId);
     const token = url.searchParams.get("token")!;
     expect(verifyFeedbackToken(input, token, secret)).toBe(true);
+  });
+
+  it("builds a sentiment URL whose token verifies in the decision slot", () => {
+    const url = new URL(
+      buildSentimentFeedbackUrl({
+        baseUrl: "https://g65fd5ni.us-west.insforge.app",
+        opportunityId: input.opportunityId,
+        digestId: "none",
+        sentiment: "good",
+        reviewerEmail: input.reviewerEmail,
+        secret
+      })
+    );
+    expect(url.searchParams.get("sentiment")).toBe("good");
+    expect(url.searchParams.get("digest_id")).toBe("none");
+    expect(url.searchParams.has("decision")).toBe(false);
+    const token = url.searchParams.get("token")!;
+    // The edge function verifies the sentiment value in the decision payload slot.
+    expect(
+      verifyFeedbackToken(
+        { ...input, digestId: "none", decision: "good" },
+        token,
+        secret
+      )
+    ).toBe(true);
   });
 });

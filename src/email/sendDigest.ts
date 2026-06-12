@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import { getEnv } from "../config/env.js";
 import { markDigestEmailSent } from "../db/queries/digests.js";
-import { buildFeedbackUrl } from "../utils/feedbackToken.js";
+import { buildFeedbackUrl, buildSentimentFeedbackUrl } from "../utils/feedbackToken.js";
 import { renderDigestEmailHtml } from "./templates/dailyDigest.js";
 import type { DigestData } from "../scout/createDigest.js";
 import { logger } from "../utils/logger.js";
@@ -42,6 +42,15 @@ export async function sendDigestEmail(
         opportunityId,
         digestId: digest.digestId,
         decision,
+        reviewerEmail: env.DIGEST_TO_EMAIL,
+        secret: env.SCOUT_FEEDBACK_SECRET!
+      }),
+    buildSentimentLink: (opportunityId, sentiment) =>
+      buildSentimentFeedbackUrl({
+        baseUrl: env.INSFORGE_URL,
+        opportunityId,
+        digestId: digest.digestId,
+        sentiment,
         reviewerEmail: env.DIGEST_TO_EMAIL,
         secret: env.SCOUT_FEEDBACK_SECRET!
       })

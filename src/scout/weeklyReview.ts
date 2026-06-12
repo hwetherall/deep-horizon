@@ -115,9 +115,13 @@ async function collectWeeklyStats(
   const sum = (rows: { cost_usd: unknown }[] | null) =>
     (rows ?? []).reduce((acc, r) => acc + (Number(r.cost_usd) || 0), 0);
 
+  // Each event carries a sentiment (faces) or a decision; report whichever is set.
+  const signalOf = (f: { sentiment: string | null; decision: string | null }) =>
+    f.sentiment ?? f.decision ?? "unknown";
   const feedbackSummary = new Map<string, number>();
   for (const f of feedback) {
-    feedbackSummary.set(f.decision, (feedbackSummary.get(f.decision) ?? 0) + 1);
+    const signal = signalOf(f);
+    feedbackSummary.set(signal, (feedbackSummary.get(signal) ?? 0) + 1);
   }
 
   // Resolve opportunity names for feedback details.
@@ -144,13 +148,13 @@ async function collectWeeklyStats(
       rawItems,
       promoted: promotedCount
     })),
-    feedbackSummary: [...feedbackSummary.entries()].map(([decision, count]) => ({
-      decision,
+    feedbackSummary: [...feedbackSummary.entries()].map(([signal, count]) => ({
+      signal,
       count
     })),
     feedbackDetails: feedback.map((f) => ({
       opportunityName: nameById.get(f.opportunity_id ?? "") ?? "(unknown)",
-      decision: f.decision,
+      signal: signalOf(f),
       comment: f.comment
     })),
     activeLessons: lessons.map((l) => l.lesson)

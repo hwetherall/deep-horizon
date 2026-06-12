@@ -1,4 +1,8 @@
-export const SCORING_VERSION = "v1";
+/**
+ * v2: dimensions re-anchored to the research-and-strategy engine
+ * (deep-horizon-seed.md) — weights unchanged, semantics changed.
+ */
+export const SCORING_VERSION = "v2";
 
 export const SCORE_WEIGHTS = {
   strategicRelevance: 0.25,

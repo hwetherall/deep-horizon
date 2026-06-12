@@ -1,7 +1,8 @@
 import { getDb } from "../db/client.js";
 import type { OpportunityRow, OpportunityEvidenceRow } from "../db/types.js";
 import { recordScore } from "../db/queries/opportunities.js";
-import { getActiveLessons } from "../db/queries/feedback.js";
+import { getActiveLessons, getRecentFeedbackSignals } from "../db/queries/feedback.js";
+import { buildTasteProfileBlock } from "../llm/prompts/taste-profile.js";
 import { getModels } from "../config/models.js";
 import { SCORING_VERSION, computeTotalScore } from "../config/scoring.js";
 import { callStructured } from "../llm/openrouter.js";
@@ -21,7 +22,11 @@ export async function scoreOpportunity(params: {
     .limit(10);
   if (error) throw new Error(`scoreOpportunity evidence fetch failed: ${error.message}`);
 
-  const lessons = await getActiveLessons();
+  const [lessons, feedbackSignals] = await Promise.all([
+    getActiveLessons(),
+    getRecentFeedbackSignals()
+  ]);
+  const tasteProfile = buildTasteProfileBlock(feedbackSignals);
 
   const result = await callStructured({
     task: "score-candidate",
@@ -34,7 +39,8 @@ export async function scoreOpportunity(params: {
         OpportunityEvidenceRow,
         "url" | "title" | "summary" | "quote"
       >[],
-      lessons
+      lessons,
+      tasteProfile
     }),
     schema: scoreResultSchema,
     jsonSchema: scoreJsonSchema as unknown as Record<string, unknown>,

@@ -1,4 +1,4 @@
-export const WEEKLY_REVIEW_PROMPT_VERSION = "weekly-review-v1";
+export const WEEKLY_REVIEW_PROMPT_VERSION = "weekly-review-v2";
 
 export interface WeeklyReviewInput {
   windowStart: string;
@@ -12,8 +12,9 @@ export interface WeeklyReviewInput {
     llmCostUsd: number;
   };
   sourcePerformance: { provider: string; rawItems: number; promoted: number }[];
-  feedbackSummary: { decision: string; count: number }[];
-  feedbackDetails: { opportunityName: string; decision: string; comment: string | null }[];
+  /** signal is a sentiment (good/neutral/bad) or a decision (benchmark/reject/...). */
+  feedbackSummary: { signal: string; count: number }[];
+  feedbackDetails: { opportunityName: string; signal: string; comment: string | null }[];
   activeLessons: string[];
 }
 
@@ -35,10 +36,12 @@ ${input.sourcePerformance.map((s) => `- ${s.provider}: ${s.rawItems} raw → ${s
 
 ## Feedback this week
 
-${input.feedbackSummary.map((f) => `- ${f.decision}: ${f.count}`).join("\n") || "(no feedback)"}
+Human ratings are good/neutral/bad ("more like this" / "less like this") plus explicit actions (benchmark, watch, reject, ...). Written comments are the strongest signal of what Innovera finds interesting.
+
+${input.feedbackSummary.map((f) => `- ${f.signal}: ${f.count}`).join("\n") || "(no feedback)"}
 
 Details:
-${input.feedbackDetails.map((f) => `- ${f.opportunityName}: ${f.decision}${f.comment ? ` — "${f.comment}"` : ""}`).join("\n") || "(none)"}
+${input.feedbackDetails.map((f) => `- ${f.opportunityName}: ${f.signal}${f.comment ? ` — "${f.comment}"` : ""}`).join("\n") || "(none)"}
 
 ## Currently active lessons
 

@@ -3,6 +3,10 @@
 > Working name: **Hermes Scout**
 >
 > Purpose: build an always-on, memory-bearing research agent that continuously discovers AI tools, APIs, companies, open-source projects, features, papers, and market developments that Innovera should **build, buy, benchmark, integrate, watch, or ignore**.
+>
+> **2026-06-12 — two-level human feedback shipped (seed Q15 first implementation):** every suggestion can be rated **good / neutral / bad** (faces) from the daily email and the HTML report, with an optional written comment as level 2 (`functions/feedback.ts`, GET = rating, POST = comment). Sentiment lives on `feedback_events.sentiment`; `decision` is now nullable. Semantics: *bad* → status `rejected` (rank penalty + resurfacing suppression); *good*/*neutral* → recorded only. Learning is two-speed: (1) a **taste profile** built from the last 60 days of ratings+comments (`src/llm/prompts/taste-profile.ts`) is injected into every extraction and scoring prompt immediately; (2) the weekly review distills ratings+comments into durable `agent_lessons`. Prompt versions: extract-v3, score-v3, weekly-review-v2.
+>
+> **2026-06-11 reframing (see `deep-horizon-seed.md`):** the original patrols below are AI/agent-infrastructure-centric. Innovera's near-term product is a deep-tech, cross-domain **research-and-strategy engine** for corporate innovation teams (initiative in → researched options + risks out). The implementation now weights Tier 1 (deep research & synthesis, market & competitive intelligence, deep-tech feasibility, patent/IP/regulatory, risk frameworks) above agent-infrastructure plumbing (Tier 2), and reframes competitor monitoring as **emergence detection** (Tier 3). Current patrol set: `src/config/patrols.ts`; scoring rubric: `docs/scoring-rubric.md` (v2); system prompt: `src/llm/prompts/system.ts`. Patrol lists in the sections below reflect the original plan and are superseded by the seed answers.
 
 ---
 
@@ -90,17 +94,26 @@ Manual run:      available via Trigger.dev dashboard or local CLI
 
 ### MVP source categories
 
-Start with these patrols:
+Start with these patrols (reweighted per `deep-horizon-seed.md` §5):
 
 ```text
-1. AI search / research tools
-2. Agent infrastructure
-3. Browser automation and computer-use tools
-4. Evals, observability, tracing, and monitoring
-5. Memory, RAG, retrieval, and knowledge systems
-6. Model/API capability changes
-7. Competitive agent companies and AI workflow platforms
-8. Open-source repos useful to Innovera
+Tier 1 — the research product itself
+1. Deep research & multi-source synthesis (ai-search-research-tools)
+2. Market & competitive intelligence
+3. Technical feasibility & deep-tech scouting
+4. Patent / IP / regulatory research
+5. Risk identification & analysis frameworks
+
+Tier 2 — plumbing that improves the engine
+6. Agent infrastructure & orchestration
+7. Memory, RAG, retrieval, and knowledge systems
+8. Evals, observability, tracing, and monitoring
+9. Model/API capability changes
+10. Browser automation and computer-use tools
+
+Tier 3 — detection & future
+11. Competitor emergence (research→strategy→risk for innovation teams)
+12. Open-source repos useful to the engine (GitHub queries)
 ```
 
 ### MVP outputs

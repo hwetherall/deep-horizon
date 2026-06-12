@@ -9,13 +9,21 @@ export interface DigestEmailParams {
   costSummary?: { providerUsd: number; llmUsd: number };
   failureSummary?: string;
   buildFeedbackLink: (opportunityId: string, decision: string) => string;
+  /** Level-1 rating links (seed Q15); falls back to decision links if absent. */
+  buildSentimentLink?: (opportunityId: string, sentiment: string) => string;
 }
 
 const FEEDBACK_DECISIONS: [label: string, decision: string][] = [
-  ["Useful", "useful"],
   ["Benchmark", "benchmark"],
   ["Watch", "watch"],
   ["Reject", "reject"]
+];
+
+/** Level-1 faces: good / neutral / bad. Click records instantly; the landing page offers a comment box. */
+const SENTIMENT_FACES: [face: string, label: string, sentiment: string][] = [
+  ["\u{1F642}", "Good", "good"],
+  ["\u{1F610}", "Neutral", "neutral"],
+  ["\u{1F641}", "Bad", "bad"]
 ];
 
 function escapeHtml(text: string): string {
@@ -41,6 +49,12 @@ export function renderDigestEmailHtml(params: DigestEmailParams): string {
     const items = params.top
       .map((r) => {
         const o = r.opportunity;
+        const sentimentRow = params.buildSentimentLink
+          ? SENTIMENT_FACES.map(
+              ([face, label, sentiment]) =>
+                `<a href="${escapeHtml(params.buildSentimentLink!(o.id, sentiment))}" style="text-decoration:none;margin-right:14px;font-size:20px;" title="${label}">${face}<span style="font-size:12px;color:#555;text-decoration:underline;margin-left:3px;">${label}</span></a>`
+            ).join("")
+          : "";
         const feedbackLinks = FEEDBACK_DECISIONS.map(
           ([label, decision]) =>
             `<a href="${escapeHtml(params.buildFeedbackLink(o.id, decision))}" style="margin-right:8px;">${label}</a>`
@@ -55,7 +69,8 @@ export function renderDigestEmailHtml(params: DigestEmailParams): string {
   Score: ${o.total_score?.toFixed(2) ?? "n/a"} &nbsp; Action: ${escapeHtml(o.recommended_action ?? "n/a")}<br/>
   ${escapeHtml(o.why_it_matters ?? "")}<br/>
   ${link}<br/>
-  <span style="font-size:12px;">Feedback: ${feedbackLinks}</span>
+  ${sentimentRow ? `<span style="font-size:12px;">Rate it: ${sentimentRow}</span><br/>` : ""}
+  <span style="font-size:12px;">Set action: ${feedbackLinks}</span>
 </li>`;
       })
       .join("\n");
