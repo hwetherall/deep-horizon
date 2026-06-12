@@ -46,6 +46,7 @@ const envSchema = z.object({
 
   SCOUT_ENABLE_EMAIL: booleanFlag,
   SCOUT_ENABLE_NOTION: booleanFlag,
+  SCOUT_ENABLE_SCHEDULE: booleanFlag,
 
   SCOUT_MAX_DAILY_PROVIDER_COST_USD: z.coerce.number().default(20),
   SCOUT_MAX_DAILY_LLM_COST_USD: z.coerce.number().default(20),

@@ -22,6 +22,21 @@ The dry run writes a digest preview to `out/dry-run-*.md`, stores raw items in I
 
 Use `--no-llm` for an ingest-only run (no OpenRouter calls).
 
+## Manual full run
+
+To exercise the complete pipeline (all patrols → classify → deep research → digest) on demand — the same `runDailyScan` code path as the scheduled task:
+
+```bash
+pnpm scout:run                       # all patrols, deep research on, no email/Notion
+pnpm scout:run --no-deep-research    # faster scan + score only
+pnpm scout:run --patrol ai-search-research-tools --patrol agent-infrastructure
+pnpm scout:run --email --publish     # also send the digest email and publish to Notion
+```
+
+Flags: `--patrol <name>` (repeatable; omit for all), `--limit <n>` (default 20), `--max-candidates <n>` (default unlimited), `--no-deep-research`, `--email`, `--publish`. Writes a preview to `out/run-*.md`; view accumulated results with `pnpm scout:report --open`.
+
+The scheduled daily scan is gated by `SCOUT_ENABLE_SCHEDULE`: while it is `false` (the default), the cron stays dormant and any scheduled invocation no-ops, so you can test manually with `pnpm scout:run` first. Set `SCOUT_ENABLE_SCHEDULE=true` to enable the automatic weekday run.
+
 ## Production enablement
 
 Set in the Trigger.dev environment:
@@ -29,6 +44,7 @@ Set in the Trigger.dev environment:
 ```
 SCOUT_ENABLE_EMAIL=true
 SCOUT_ENABLE_NOTION=true
+SCOUT_ENABLE_SCHEDULE=true
 ```
 
 Schedules (all America/Denver): daily scan weekdays 07:00, watchlist weekdays 09:00, weekly review Fridays 10:00. The daily email lands ~08:00 depending on scan duration; if stricter timing is needed, split `publish-digest` onto its own 08:00 schedule.

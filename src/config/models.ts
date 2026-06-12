@@ -15,12 +15,12 @@ export function getModels(): {
   strategy: string;
 } {
   return {
-    triage: modelOrDefault(process.env.OPENROUTER_TRIAGE_MODEL, "openai/gpt-5.2-mini"),
+    triage: modelOrDefault(process.env.OPENROUTER_TRIAGE_MODEL, "openai/gpt-5.4-mini"),
     extraction: modelOrDefault(
       process.env.OPENROUTER_EXTRACTION_MODEL,
       "anthropic/claude-sonnet-4.6"
     ),
-    brief: modelOrDefault(process.env.OPENROUTER_BRIEF_MODEL, "openai/gpt-5.2"),
+    brief: modelOrDefault(process.env.OPENROUTER_BRIEF_MODEL, "openai/gpt-5.5"),
     strategy: modelOrDefault(
       process.env.OPENROUTER_STRATEGY_MODEL,
       "anthropic/claude-opus-4.7"

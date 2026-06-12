@@ -19,6 +19,7 @@
     "db:migrations": "insforge db migrations list",
     "functions:deploy": "insforge functions deploy feedback --file functions/feedback.ts --name \"Scout Feedback\"",
     "scout:dry-run": "node --import tsx scripts/dry-run.ts",
+    "scout:run": "node --import tsx scripts/run-scan.ts",
     "scout:list": "node --import tsx scripts/list-opportunities.ts",
     "scout:report": "node --import tsx scripts/generate-report.ts"
   },

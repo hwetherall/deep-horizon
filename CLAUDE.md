@@ -42,3 +42,4 @@ Find AI tools, APIs, repos, companies, features, and research that Innovera shou
 - db migrate: `pnpm db:migrate` (InsForge CLI; project must be linked via `npx @insforge/cli link`)
 - deploy feedback function: `pnpm functions:deploy`
 - scout dry run: `pnpm scout:dry-run --patrol ai-search-research-tools --limit 20`
+- scout full run (manual, all patrols + deep research): `pnpm scout:run` (email/Notion off by default; `--email`/`--publish` to enable). The scheduled daily scan is gated by `SCOUT_ENABLE_SCHEDULE` (default off).
